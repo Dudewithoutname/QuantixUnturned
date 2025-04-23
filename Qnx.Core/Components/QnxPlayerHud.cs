@@ -26,12 +26,10 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowDeathMenu, false);
         
         _qnx.Player.life.onVirusUpdated += onVirus;
-        _qnx.Life.OnHealthChanged += onHealth;
     }
 
     private void OnDestroy()
     {
-        // _qnx.Life.OnHealthChanged <- I hope gc collects this
         _qnx.Player.life.onVirusUpdated -= onVirus;
     }
 
@@ -40,18 +38,7 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         
     }
 
-    private void onVirus(byte virus)
-    {
-        if (virus == _virusSeq) 
-            return;
-        
-        uiText("VIRUS_NAME ", virus.ToString());
-        uiVisible($"BAR_NAME {virus}", true);
-        uiVisible($"BAR_NAME {_virusSeq}", false);
-        _virusSeq = virus;
-    }
-
-    private void onHealth()
+    public void UpdateHealth()
     {
         uiText("HEALTH_NAME ", _qnx.Life.Health.ToString());
 
@@ -64,7 +51,17 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         _healthSeq = newSeq;
     }
 
-
+    private void onVirus(byte virus)
+    {
+        if (virus == _virusSeq) 
+            return;
+        
+        uiText("VIRUS_NAME ", virus.ToString());
+        uiVisible($"BAR_NAME {virus}", true);
+        uiVisible($"BAR_NAME {_virusSeq}", false);
+        _virusSeq = virus;
+    }
+    
     private void uiText(string child, string text, bool reliable = true)
         => EffectManager.sendUIEffectText(KEY, _qnx.Player.TC(), reliable, child, text);
     

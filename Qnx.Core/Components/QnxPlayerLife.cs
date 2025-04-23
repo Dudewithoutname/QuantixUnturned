@@ -5,7 +5,7 @@ namespace Qnx.Core.Components;
 
 public class QnxPlayerLife : IPlayerComponent 
 {
-    private QnxPlayer _player;
+    private QnxPlayer _qnx;
     
     public Action OnHealthChanged;
 
@@ -21,10 +21,10 @@ public class QnxPlayerLife : IPlayerComponent
 
             if (_health <= 100)
             {
-                _player.Player.life.serverModifyHealth(-100 + _health);
+                _qnx.Player.life.serverModifyHealth(-100 + _health);
             }
             
-            OnHealthChanged.Invoke();
+            _qnx.Hud.UpdateHealth();
         }
     }
     
@@ -33,6 +33,6 @@ public class QnxPlayerLife : IPlayerComponent
 
     public void Initialize(QnxPlayer player)
     {
-        _player = player;
+        _qnx = player;
     }
 }

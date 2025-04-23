@@ -1,1 +1,0 @@
-global using Qnx.Core.Extensions;

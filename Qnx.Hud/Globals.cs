@@ -1,6 +1,1 @@
-namespace Qnx.Hud;
-
-public class Globals
-{
-    
-}
+global using Qnx.Core.Extensions;

@@ -1,6 +1,8 @@
 using System;
 using Qnx.Core.Extensions;
 using Qnx.Core.Interfaces;
+using Rocket.Unturned.Events;
+using Rocket.Unturned.Player;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -8,7 +10,7 @@ namespace Qnx.Core.Components;
 
 public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
 {
-    private const ushort ID = 15215;
+    private const ushort ID = 31189;
     private const short KEY = 152;
 
     private QnxPlayer _qnx;
@@ -20,17 +22,27 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
     {
         _qnx = player;
         
+        #pragma warning disable CS0618 // Type or member is obsolete
+        EffectManager.sendUIEffect(ID, KEY, player.Player.TC(), true);
+        #pragma warning restore CS0618 // Type or member is obsolete
+        
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowLifeMeters, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowUseableGunStatus, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowReputationChangeNotification, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowDeathMenu, false);
         
-        _qnx.Player.life.onVirusUpdated += onVirus;
+        UnturnedPlayerEvents.OnPlayerUpdateVirus += onVirus;
+
+        UpdateHealth();
+        onVirus(_qnx.Player.life.virus);
+        
+        uiText("money v", "100 <color=#3FD200>$</color>");
+        uiText("kills v", "0 / 10 Kills");
     }
 
     private void OnDestroy()
     {
-        _qnx.Player.life.onVirusUpdated -= onVirus;
+        UnturnedPlayerEvents.OnPlayerUpdateVirus -= onVirus;
     }
 
     public void SetActive(bool active)
@@ -40,14 +52,14 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
 
     public void UpdateHealth()
     {
-        uiText("HEALTH_NAME ", _qnx.Life.Health.ToString());
+        uiText("health v", _qnx.Life.Health.ToString());
 
         var newSeq = Mathf.FloorToInt((float)_qnx.Life.Health / _qnx.Life.MaxHealth * 100);
         if (newSeq == _healthSeq)
             return;
         
-        uiVisible($"BAR_NAME {newSeq}", true);
-        uiVisible($"BAR_NAME {_healthSeq}", false);
+        uiVisible($"hv {newSeq}", true);
+        uiVisible($"hv {_healthSeq}", false);
         _healthSeq = newSeq;
     }
 
@@ -56,9 +68,21 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         if (virus == _virusSeq) 
             return;
         
-        uiText("VIRUS_NAME ", virus.ToString());
-        uiVisible($"BAR_NAME {virus}", true);
-        uiVisible($"BAR_NAME {_virusSeq}", false);
+        uiVisible($"vb {virus}", true);
+        uiVisible($"vb {_virusSeq}", false);
+        _virusSeq = virus;
+    }
+
+    private void onVirus(UnturnedPlayer player, byte virus)
+    {
+        if (player.Player != _qnx.Player) 
+            return;
+        
+        if (virus == _virusSeq) 
+            return;
+        
+        uiVisible($"vb {virus}", true);
+        uiVisible($"vb {_virusSeq}", false);
         _virusSeq = virus;
     }
     

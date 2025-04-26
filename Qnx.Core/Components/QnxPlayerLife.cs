@@ -18,18 +18,9 @@ public class QnxPlayerLife : IPlayerComponent
         {
             var newHealth = value;
 
-            Logger.Log("1");
             if (newHealth > MaxHealth)
                 return;
-            Logger.Log("2");
-
-            if (newHealth <= 100)
-            {
-                _qnx.Player.life.serverModifyHealth(newHealth - _health);
-                Logger.Log("3");
-
-            }
-            Logger.Log("4");
+            
 
             _health = newHealth;
             _qnx.Hud.UpdateHealth();

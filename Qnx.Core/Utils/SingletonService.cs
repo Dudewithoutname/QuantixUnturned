@@ -28,5 +28,5 @@ public abstract class SingletonService<T> : IService  where T : class
     }
     
     
-    public virtual void OnDispose() {}
+    protected virtual void OnDispose() {}
 }

@@ -19,7 +19,7 @@ public class PlayerService : SingletonService<PlayerService>
         Provider.onEnemyDisconnected += onPlayerDisconnect;
     }
 
-    public override void OnDispose()
+    protected override void OnDispose()
     {
         Players = null;
         Player.onPlayerCreated -= onPlayerConnect;

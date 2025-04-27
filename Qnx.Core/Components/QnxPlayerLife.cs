@@ -2,16 +2,17 @@ using System;
 using Qnx.Core.Interfaces;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
+using SDG.Unturned;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
 namespace Qnx.Core.Components;
 
-public class QnxPlayerLife : IPlayerComponent 
+public class QnxPlayerLife : MonoBehaviour, IPlayerComponent
 {
     private QnxPlayer _qnx;
     
-    public ushort Health
+    public int Health
     {
         get => _health;
         set
@@ -26,23 +27,19 @@ public class QnxPlayerLife : IPlayerComponent
             _qnx.Hud.UpdateHealth();
         }
     }
-    
-    public ushort MaxHealth = 100;
-    private ushort _health;
+
+    public ushort Regen = 0;
+    public ushort MaxHealth = 150;
+    private int _health;
 
     public void Initialize(QnxPlayer player)
     {
         _qnx = player;
-        _health = player.Player.life.health;
-        UnturnedPlayerEvents.OnPlayerUpdateHealth += onHealth;
+        _health = 150;
     }
-
-    private void onHealth(UnturnedPlayer p, byte newHealth)
+    
+    public void Revive()
     {
-        if (p.Player != _qnx.Player) 
-            return;
-        
-        _health = newHealth;
-        _qnx.Hud.UpdateHealth();
+        Health = MaxHealth;
     }
 }

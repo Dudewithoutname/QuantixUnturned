@@ -21,7 +21,7 @@ public class QnxPlayer : MonoBehaviour
         Life.Initialize(this);
         Hud.Initialize(this);
     }
-
+    
     internal void Remove()
     {
         Destroy(this);

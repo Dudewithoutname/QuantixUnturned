@@ -29,7 +29,7 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowLifeMeters, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowUseableGunStatus, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowReputationChangeNotification, false);
-        _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowDeathMenu, false);
+        //_qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowDeathMenu, false);
         
         UnturnedPlayerEvents.OnPlayerUpdateVirus += onVirus;
 

@@ -31,24 +31,97 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowReputationChangeNotification, false);
         //_qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowDeathMenu, false);
         
-        UnturnedPlayerEvents.OnPlayerUpdateVirus += onVirus;
 
         UpdateHealth();
-        onVirus(_qnx.Player.life.virus);
+        UpdateVirus(_qnx.Player.life.virus);
         
         uiText("money v", "100 <color=#3FD200>$</color>");
         uiText("kills v", "0 / 10 Kills");
+
+        PlayerEquipment.OnInspectingUseable_Global += onInspect;
+
+        _qnx.Player.equipment.onEquipRequested += onEquip;
+        _qnx.Player.equipment.onDequipRequested += onDequip;
+        
+        if (player.Player.equipment.itemID != 0)
+        {
+            bool garbage = false;
+            onEquip
+            (
+                _qnx.Player.equipment,
+                _qnx.Player.inventory.getItem(
+                    _qnx.Player.equipment.equippedPage,
+                    _qnx.Player.inventory.getIndex(_qnx.Player.equipment.equippedPage, _qnx.Player.equipment.equipped_x, _qnx.Player.equipment.equipped_y)
+                ),
+                _qnx.Player.equipment.asset, 
+                ref garbage
+            );
+            return;
+        }
+        
+        uiVisible("weapons", false);
     }
 
     private void OnDestroy()
     {
-        UnturnedPlayerEvents.OnPlayerUpdateVirus -= onVirus;
+        _qnx.Player.equipment.onEquipRequested -= onEquip;
+        PlayerEquipment.OnInspectingUseable_Global -= onInspect;
+        _qnx.Player.equipment.onDequipRequested -= onDequip;
+
     }
 
     public void SetActive(bool active)
     {
-        
     }
+
+    private void onInspect(PlayerEquipment equipment)
+    {
+        if (equipment.player.SteamID() != _qnx.Player.SteamID())
+            return;
+     
+        uiVisible("w up", false);
+        uiVisible("w up", true);
+    }
+    private void onEquip(PlayerEquipment equipment, ItemJar jar, ItemAsset asset, ref bool _)
+    {
+        switch (asset)
+        {
+            case ItemMeleeAsset melee:
+            {
+                uiText("w mode", "MELEE");
+                uiText("w n", "1");
+                uiText("w a", "1");
+                uiVisible("w up", true);
+                break;
+            }
+            case ItemGunAsset gun:
+            {
+                // todo ammo management
+                uiVisible("w up", true);
+                break;
+            }
+            case ItemMedicalAsset { hasAid: true } medical:
+            {
+                uiText("w mode", "HEAL");
+                uiText("w n", "HP");
+                uiText("w a", medical.health.ToString());
+                uiVisible("w up", false);
+                break;
+            }
+            
+            default:
+            {
+                uiVisible("weapons", false);
+                return;
+            }        
+        }
+        uiText("w name", asset.FriendlyName);
+        uiVisible("weapons", false);
+        uiVisible("weapons", true);
+    }
+
+    private void onDequip(PlayerEquipment equipment, ref bool _)
+     => uiVisible("weapons", false);
 
     public void UpdateHealth()
     {
@@ -63,21 +136,8 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
         _healthSeq = newSeq;
     }
 
-    private void onVirus(byte virus)
+    public void UpdateVirus(byte virus)
     {
-        if (virus == _virusSeq) 
-            return;
-        
-        uiVisible($"vb {virus}", true);
-        uiVisible($"vb {_virusSeq}", false);
-        _virusSeq = virus;
-    }
-
-    private void onVirus(UnturnedPlayer player, byte virus)
-    {
-        if (player.Player != _qnx.Player) 
-            return;
-        
         if (virus == _virusSeq) 
             return;
         
@@ -94,4 +154,13 @@ public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
     
     private void uiImage(string child, string image, bool reliable = true)
         => EffectManager.sendUIEffectImageURL(KEY, _qnx.Player.TC(), reliable, child, image);
+
+    private static string getFiremodeName(EFiremode firemode) => firemode switch
+    {
+        EFiremode.AUTO => "AUTO",
+        EFiremode.SEMI => "SEMI",
+        EFiremode.SAFETY => "LOCK",
+        EFiremode.BURST => "BURST",
+        _ => "ERR"
+    };
 }

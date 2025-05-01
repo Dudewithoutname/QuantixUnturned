@@ -8,6 +8,7 @@ using Rocket.Unturned.Player;
 using SDG.NetTransport;
 using SDG.Unturned;
 using Steamworks;
+using PlayerLife = SDG.Unturned.PlayerLife;
 
 namespace Qnx.Core.Services;
 
@@ -24,10 +25,13 @@ public class PlayerHealthService : SingletonService<PlayerHealthService>
         
         UnturnedPlayerEvents.OnPlayerRevive += onRevive;
         UnturnedPlayerEvents.OnPlayerUpdateVirus += onVirus;
-        
     }
+    
     protected override void OnDispose()
     {
+        UnturnedPlayerEvents.OnPlayerRevive -= onRevive;
+        UnturnedPlayerEvents.OnPlayerUpdateVirus -= onVirus;
+
     }
 
     private void onRevive(UnturnedPlayer player, Vector3 _v, byte _e)

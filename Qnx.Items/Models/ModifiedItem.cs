@@ -8,6 +8,7 @@ public record ModifiedItem<T> : ModifiedBase where T : ItemAsset
 {
     [YamlIgnore] public T? Asset;
     
+    [YamlMember(Order = 0)]
     public ushort Id;
 
     public override void Initialize()

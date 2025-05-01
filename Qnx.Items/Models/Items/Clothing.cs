@@ -1,6 +1,8 @@
+using SDG.Unturned;
+
 namespace Qnx.Items.Models.Items;
 
-public class Clothing
+public record Clothing : ModifiedItem<ItemClothingAsset>
 {
     
 }

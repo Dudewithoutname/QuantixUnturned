@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Qnx.Core.Components;
 
-public class QnxPlayerBuffs : MonoBehaviour, IPlayerComponent
+public class PlayerBuffs : MonoBehaviour, IPlayerComponent
 {
     private QnxPlayer _qnx;
     
-    public Dictionary<EBuff, int> BuffModifier = EnumDictionary.Create<int>();
-    public Dictionary<EBuff, float> BuffChance = EnumDictionary.Create<float>();
-    public Dictionary<EBuff, byte> BuffProtection = EnumDictionary.Create<byte>();
+    public Dictionary<EBuff, int> BuffModifier = EnumDictionary.Create<EBuff, int>();
+    public Dictionary<EBuff, float> BuffChance = EnumDictionary.Create<EBuff, float>();
+    public Dictionary<EBuff, byte> BuffProtection = EnumDictionary.Create<EBuff, byte>();
     
     public void Initialize(QnxPlayer player)
     {

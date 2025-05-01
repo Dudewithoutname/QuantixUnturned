@@ -7,7 +7,7 @@ namespace Qnx.Core.Utils;
 
 public static class EnumDictionary
 {
-    public static Dictionary<EBuff, T> Create<T>()
-        => Enum.GetValues(typeof(EBuff)).Cast<EBuff>().ToDictionary(v => v, v => default(T));
+    public static Dictionary<TEnum, TValue> Create<TEnum,TValue> () where TEnum : Enum
+        => Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToDictionary(v => v, v => default(TValue));
     
 }

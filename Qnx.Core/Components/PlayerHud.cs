@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Qnx.Core.Components;
 
-public class QnxPlayerHud : MonoBehaviour, IPlayerComponent
+public class PlayerHud : MonoBehaviour, IPlayerComponent
 {
     private const ushort ID = 31189;
     private const short KEY = 152;

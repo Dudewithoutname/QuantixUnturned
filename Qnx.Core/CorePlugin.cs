@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using Qnx.Core.Interfaces;
 using Qnx.Core.Services;
-using Rocket.Core.Logging;
 using Rocket.Core.Plugins;
+using SDG.Unturned;
+
 namespace Qnx.Core;
 
-public class Plugin : RocketPlugin
+public class CorePlugin : RocketPlugin
 {
     public List<IService> Services;
 
     private Harmony _harmony;
     
-    public override void LoadPlugin()
+    protected override void Load()
     {
         _harmony = new Harmony("dudewithoutname.qnx.core");
         _harmony.PatchAll();
@@ -23,5 +23,9 @@ public class Plugin : RocketPlugin
             new PlayerService(),
             new PlayerHealthService(),
         ];
+    }
+
+    protected override void Unload()
+    {
     }
 }

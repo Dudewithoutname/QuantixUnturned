@@ -9,7 +9,7 @@ using Logger = Rocket.Core.Logging.Logger;
 
 namespace Qnx.Core.Components;
 
-public class QnxPlayerLife : MonoBehaviour, IPlayerComponent
+public class PlayerLife : MonoBehaviour, IPlayerComponent
 {
     private QnxPlayer _qnx;
     

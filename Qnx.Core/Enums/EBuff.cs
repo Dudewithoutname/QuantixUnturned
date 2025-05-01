@@ -7,8 +7,9 @@ public enum EBuff
     RADIATION,
     IGNITE,
     KNOCKBACK,
+    DRUGS,
     FREEZE,
     BLEED,
     SLOW,
-    KILL_ON_HEAL,
+    REAPER,
 }

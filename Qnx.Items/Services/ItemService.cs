@@ -3,12 +3,11 @@ using Qnx.Core.Interfaces;
 
 namespace Qnx.Items.Services;
 
-public class ReaderService 
+public class ItemService 
 {
-
     private string _path;
     
-    public ReaderService()
+    public ItemService()
     {
         _path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
         
@@ -18,6 +17,7 @@ public class ReaderService
             
         }
     }
+    
     public void Dispose()
     {
         

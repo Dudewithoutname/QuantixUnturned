@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Qnx.Core\Qnx.Core.csproj" />
+      <ProjectReference Include="..\Qnx.Items.SourceGenerators\Qnx.Items.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -51,10 +52,6 @@
       <Reference Include="UnityEx">
         <HintPath>..\Redist\UnityEx.dll</HintPath>
       </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Models\Buffs\" />
     </ItemGroup>
 
 </Project>

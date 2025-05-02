@@ -2,7 +2,7 @@ using SDG.Unturned;
 
 namespace Qnx.Items.Models.Items;
 
-public record Attachment : ModifiedItem<ItemCaliberAsset>
+public record Attachment : ModifiedItem
 {
     
 }

@@ -1,6 +1,6 @@
 namespace Qnx.Items.Models.Items;
 
-public class ClothingSet
+public record ClothingSet : ModifiedBase
 {
     
 }

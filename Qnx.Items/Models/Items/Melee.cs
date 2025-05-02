@@ -3,6 +3,6 @@ using SDG.Unturned;
 
 namespace Qnx.Items.Models.Items;
 
-public record Melee : ModifiedItem<ItemMeleeAsset>
+public record Melee : ModifiedItem
 {
 }

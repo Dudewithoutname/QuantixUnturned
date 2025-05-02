@@ -14,7 +14,7 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
 {
     public QnxPlayer _qnx;
 
-    public Dictionary<EClothing, ModifiedItem<ItemClothingAsset>?> ClothingBuffs; 
+    public Dictionary<EClothing, ModifiedItem?> ClothingBuffs; 
     
     public ushort[] ClothesArray => 
     [
@@ -26,7 +26,7 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
     public void Initialize(QnxPlayer player)
     {
         _qnx = player;
-        ClothingBuffs = EnumDictionary.Create<EClothing, ModifiedItem<ItemClothingAsset>?>();
+        ClothingBuffs = EnumDictionary.Create<EClothing, ModifiedItem?>();
         
         _qnx.Player.clothing.onHatUpdated += updateHat;
         _qnx.Player.clothing.onGlassesUpdated += updateGlasses;

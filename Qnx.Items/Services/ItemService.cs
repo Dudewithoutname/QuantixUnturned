@@ -1,55 +1,61 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Qnx.Core.Interfaces;
 using Qnx.Items.Enums;
 using Qnx.Items.Models;
+using Qnx.Items.Models.Items;
+using Rocket.Core.Logging;
 using SDG.Unturned;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Qnx.Items.Services;
 
 public class ItemService 
 {
-    // let's save 50 nanoseconds
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _hats = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _glasses = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _masks = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _shirts = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _vests = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _pants = [];
-    private Dictionary<ushort, ModifiedItem<ItemClothingAsset>> _backpack = [];
-
-
+    private Dictionary<ushort, ModifiedItem> _items = [];
     
-    private string _path;
+    private Dictionary<string, GunSet> _gunSets = [];
     
+    private Dictionary<ushort, Attachment> _gunAttachments = [];
+
     public ItemService()
     {
-        _path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
+        var path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
         
-        foreach (var file in Directory.EnumerateFiles(_path))
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance)
+            .Build();
+        
+        foreach (var file in Directory.EnumerateFiles(path))
         {
             if (!file.EndsWith(".yaml")) continue;
-            
+            var items = deserializer.Deserialize<List<ModifiedBase>>(File.ReadAllText(file));
+            foreach (var mod in items)
+            {
+                mod.Initialize();
+                
+                if (mod is ModifiedItem item)
+                {
+                    _items.Add(item.Id, item);
+                }
+            }
         }
+        
+        Logger.Log($"Loaded {_items.Count} items");
     }
 
-    public ModifiedItem<ItemClothingAsset>? GetClothingModifier(EClothing type, ushort id)
-    {
-        return type switch
-        {
-            EClothing.HAT => _hats.GetValueOrDefault(id),
-            EClothing.GLASSES => _glasses.GetValueOrDefault(id),
-            EClothing.MASK => _masks.GetValueOrDefault(id),
-            EClothing.SHIRT => _shirts.GetValueOrDefault(id),
-            EClothing.VEST => _vests.GetValueOrDefault(id),
-            EClothing.PANTS => _pants.GetValueOrDefault(id),
-            EClothing.BACKPACK => _backpack.GetValueOrDefault(id),
-            _ => null
-        };
-    }
+    public T? GetItem<T>(ushort id) where T : ModifiedBase
+        => _items.GetValueOrDefault(id) as T;
+
+    public Attachment? GetAttachment(ushort attachmentId)
+        => _gunAttachments.GetValueOrDefault(attachmentId);
     
-    public void Dispose()
+    public GunSet? GetGunSet(Item item)
     {
-        
+        var str = item.id.ToString() + item.state[];
+        item.
     }
+
 }

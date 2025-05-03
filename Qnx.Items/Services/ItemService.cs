@@ -79,6 +79,10 @@ public class ItemService : SingletonService<ItemService>
     public GunSet? GetGunSet(Item item)
     {
         var gunSets = _gunSets.GetValueOrDefault(item.id);
+        
+        if (gunSets is null)
+            return null;
+        
         var sight = BitConverter.ToUInt16(item.state, 0);
         var tactical = BitConverter.ToUInt16(item.state, 2);
         var grip = BitConverter.ToUInt16(item.state, 4);

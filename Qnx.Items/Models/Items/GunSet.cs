@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using Qnx.Items.Models.Misc;
 
 namespace Qnx.Items.Models.Items;
 
-public class GunSet
+public record GunSet : ModifiedBase
 {
-
+    public ushort Id;
+    public GunSetParts? Attachments;
 }

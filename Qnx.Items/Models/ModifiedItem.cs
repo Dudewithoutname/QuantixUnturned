@@ -8,9 +8,4 @@ public record ModifiedItem : ModifiedBase
 {
     [YamlMember(Order = 0)]
     public ushort Id;
-
-    public override void Initialize()
-    {
-        
-    }
 }

@@ -7,6 +7,4 @@ public record ModifiedBase
 {
     [YamlMember(Order = 99)]
     public List<Buff>? Buffs;
-    
-    public virtual void Initialize() { }
 }

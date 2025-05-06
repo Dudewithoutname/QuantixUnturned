@@ -5,6 +5,7 @@ using Qnx.Core.Interfaces;
 using Qnx.Core.Utils;
 using Qnx.Items.Enums;
 using Qnx.Items.Models;
+using Qnx.Items.Models.Items;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -15,18 +16,22 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
     public QnxPlayer _qnx;
 
     public Dictionary<EClothing, ModifiedItem?> ClothingBuffs; 
-    
-    public ushort[] ClothesArray => 
+    public List<ClothingSet> ClothingSets; 
+
+
+    private ushort[] _clothesArray => 
     [
-        _qnx.Player.clothing.hat, _qnx.Player.clothing.glasses, _qnx.Player.clothing.mask,
-        _qnx.Player.clothing.shirt, _qnx.Player.clothing.vest,
-        _qnx.Player.clothing.pants, _qnx.Player.clothing.backpack
+        _qnx.Player.clothing.shirt, _qnx.Player.clothing.pants, _qnx.Player.clothing.hat,
+        _qnx.Player.clothing.vest, _qnx.Player.clothing.glasses, _qnx.Player.clothing.mask,
+        _qnx.Player.clothing.backpack
     ];
     
     public void Initialize(QnxPlayer player)
     {
         _qnx = player;
+        
         ClothingBuffs = EnumDictionary.Create<EClothing, ModifiedItem?>();
+        ClothingSets = [];
         
         _qnx.Player.clothing.onHatUpdated += updateHat;
         _qnx.Player.clothing.onGlassesUpdated += updateGlasses;

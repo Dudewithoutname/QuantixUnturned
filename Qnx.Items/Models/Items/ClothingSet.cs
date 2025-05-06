@@ -5,5 +5,6 @@ namespace Qnx.Items.Models.Items;
 
 public record ClothingSet : ModifiedBase
 {
+    public string? Name;
     public ClothingSetParts? Parts;
 }

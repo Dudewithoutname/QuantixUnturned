@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Qnx.Core.Utils;
 using Qnx.Items.Models;
 using Qnx.Items.Models.Items;
@@ -15,7 +16,8 @@ public class ItemService : SingletonService<ItemService>
 {
     private Dictionary<ushort, ModifiedItem> _items = [];
     private Dictionary<ushort, List<GunSet>> _gunSets = [];
-    
+    private List<ClothingSet> _clothingSets = [];
+
     public ItemService()
     {
         var path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
@@ -41,7 +43,8 @@ public class ItemService : SingletonService<ItemService>
                             Logger.LogWarning($"duplicate of item with id {item.Id} from {file}");
                             continue;
                         }
-                        _items.Add(item.Id, item);
+                        
+                        _items.TryAdd(item.Id, item);
                         continue;
                     
                     case GunSet set:
@@ -50,19 +53,30 @@ public class ItemService : SingletonService<ItemService>
                             list.Add(set);
                             continue;
                         }
-                        
+
                         _gunSets.Add(set.Id, [set]);
+                        continue;
+                    case ClothingSet set:
+                        if (set.Parts is null)
+                        {
+                            Logger.LogWarning($"Ignoring clothing set {set.Name ?? "NULL_NAME"}, doesn't have any parts from {file}");
+                            continue;
+                        }
+                        _clothingSets.Add(set);
                         continue;
                 }
             }
         }
         
-        Logger.Log($"Loaded {_items.Count} items");
+        Logger.Log($"Loaded {_items.Count} items, {_clothingSets.Count} clothing sets, {_gunSets.Count} gun sets");
     }
 
     public ModifiedItem? GetItem(ushort id)
         => _items.GetValueOrDefault(id);
 
+    public void GetClothingSets(List<ClothingSet> source, ushort[] clothes) 
+        => source.AddRange(_clothingSets.Where(set => set.Parts!.Compare(clothes)));
+    
     public void GetAttachmentBuffs(List<ModifiedItem> source, Item item)
     {
         for (var i = 0; i <= 6; i += 2)

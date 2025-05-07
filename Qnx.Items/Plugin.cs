@@ -8,11 +8,13 @@ using Qnx.Items.Services;
 using Rocket.Core.Plugins;
 using SDG.Unturned;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
 namespace Qnx.Items;
 
 public class Plugin : RocketPlugin
 {
-    public List<IService> _services;
+    public List<IService>  _services;
     protected override void Load()
     {
         _services =

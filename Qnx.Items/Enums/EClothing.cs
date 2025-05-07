@@ -8,5 +8,5 @@ public enum EClothing : byte
     SHIRT,
     VEST,
     PANTS,
-    BACKPACK
+    BACKPACK,
 }

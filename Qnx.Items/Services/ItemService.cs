@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Qnx.Core.Utils;
 using Qnx.Items.Models;
 using Qnx.Items.Models.Items;
@@ -21,10 +22,8 @@ public class ItemService : SingletonService<ItemService>
     public ItemService()
     {
         var path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
-        
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build();
+
+        var deserializer = createDeserializer();
         
         foreach (var file in Directory.EnumerateFiles(path))
         {
@@ -32,43 +31,66 @@ public class ItemService : SingletonService<ItemService>
                 continue;
            
             var items = deserializer.Deserialize<List<ModifiedBase>>(File.ReadAllText(file));
-            
-            foreach (var mod in items)
-            {
-                switch (mod)
-                {
-                    case ModifiedItem item:
-                        if (_items.TryAdd(item.Id, item))
-                        {
-                            Logger.LogWarning($"duplicate of item with id {item.Id} from {file}");
-                            continue;
-                        }
-                        
-                        _items.TryAdd(item.Id, item);
-                        continue;
-                    
-                    case GunSet set:
-                        if (_gunSets.TryGetValue(set.Id, out var list))
-                        {
-                            list.Add(set);
-                            continue;
-                        }
-
-                        _gunSets.Add(set.Id, [set]);
-                        continue;
-                    case ClothingSet set:
-                        if (set.Parts is null)
-                        {
-                            Logger.LogWarning($"Ignoring clothing set {set.Name ?? "NULL_NAME"}, doesn't have any parts from {file}");
-                            continue;
-                        }
-                        _clothingSets.Add(set);
-                        continue;
-                }
-            }
+            registerItems(items, file);
         }
         
         Logger.Log($"Loaded {_items.Count} items, {_clothingSets.Count} clothing sets, {_gunSets.Count} gun sets");
+    }
+
+    private IDeserializer createDeserializer()
+    {
+        var b = new DeserializerBuilder()
+            .WithNamingConvention(CamelCaseNamingConvention.Instance);
+        
+        var types = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => 
+                t is { IsAbstract: false, IsClass: true } 
+                && (typeof(ModifiedBase).IsAssignableFrom(t) || 
+                    typeof(Buff).IsAssignableFrom(t)));
+        
+        foreach (var type in types)
+        {
+            var tag = "!" + type.Name;
+            b = b.WithTagMapping(tag, type);
+        }
+        
+        return b.Build();
+    }
+    
+    private void registerItems(List<ModifiedBase> items, string fileName = "unknown")
+    {
+        foreach (var mod in items)
+        {
+            switch (mod)
+            {
+                case ModifiedItem item:
+                    if (_items.TryAdd(item.Id, item))
+                    {
+                        continue;
+                    }
+                    Logger.LogWarning($"duplicate of item with id {item.Id} from {fileName}");
+                    continue;
+                    
+                case GunSet set:
+                    if (_gunSets.TryGetValue(set.Id, out var list))
+                    {
+                        list.Add(set);
+                        continue;
+                    }
+
+                    _gunSets.Add(set.Id, [set]);
+                    continue;
+                case ClothingSet set:
+                    if (set.Parts is null)
+                    {
+                        Logger.LogWarning($"Ignoring clothing set {set.Name ?? "NULL_NAME"}, doesn't have any parts from {fileName}");
+                        continue;
+                    }
+                    _clothingSets.Add(set);
+                    continue;
+            }
+        }
     }
 
     public ModifiedItem? GetItem(ushort id)
@@ -77,11 +99,11 @@ public class ItemService : SingletonService<ItemService>
     public void GetClothingSets(List<ClothingSet> source, ushort[] clothes) 
         => source.AddRange(_clothingSets.Where(set => set.Parts!.Compare(clothes)));
     
-    public void GetAttachmentBuffs(List<ModifiedItem> source, Item item)
+    public void GetAttachmentBuffs(List<ModifiedItem> source, byte[] state)
     {
         for (var i = 0; i <= 6; i += 2)
         {
-            var att  = BitConverter.ToUInt16(item.state, i);
+            var att  = BitConverter.ToUInt16(state, i);
             
             if (att == 0 || !_items.TryGetValue(att, out var value))
                 continue;
@@ -90,17 +112,17 @@ public class ItemService : SingletonService<ItemService>
         }
     }
     
-    public GunSet? GetGunSet(Item item)
+    public GunSet? GetGunSet(ushort id, byte[] state)
     {
-        var gunSets = _gunSets.GetValueOrDefault(item.id);
+        var gunSets = _gunSets.GetValueOrDefault(id);
         
         if (gunSets is null)
             return null;
         
-        var sight = BitConverter.ToUInt16(item.state, 0);
-        var tactical = BitConverter.ToUInt16(item.state, 2);
-        var grip = BitConverter.ToUInt16(item.state, 4);
-        var barrel = BitConverter.ToUInt16(item.state, 6);
+        var sight = BitConverter.ToUInt16(state, 0);
+        var tactical = BitConverter.ToUInt16(state, 2);
+        var grip = BitConverter.ToUInt16(state, 4);
+        var barrel = BitConverter.ToUInt16(state, 6);
 
         foreach (var set in gunSets)
         {

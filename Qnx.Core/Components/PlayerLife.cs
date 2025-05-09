@@ -24,7 +24,7 @@ public class PlayerLife : MonoBehaviour, IPlayerComponent
             var newHealth = value;
 
             if (newHealth > MaxHealth)
-                newHealth = 150;
+                newHealth = MaxHealth;
 
             if (newHealth < 0)
                 newHealth = 0;
@@ -77,11 +77,11 @@ public class PlayerLife : MonoBehaviour, IPlayerComponent
             if (_health < 0) 
                 _health = 1;
             
-            _qnx.Player.life.askDamage(255, Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out var _);
+            _qnx.Player.life.askDamage(255, Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out _);
             return;
         }
         
-        _qnx.Player.life.askDamage((byte)Mathf.Max(damage, 255), Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out var _);
+        _qnx.Player.life.askDamage((byte)Mathf.Max(damage, 255), Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out _);
     }
 
     public void Heal(int heal)

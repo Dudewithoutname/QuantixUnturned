@@ -75,7 +75,7 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
         var item = equipment.itemID == 0 ? null : ItemService.Singleton.GetItem(equipment.itemID);
         
         if (Useable is not null)
-        {
+        { 
             Useable?.RemoveFromPlayer(this);
             Useable = null;
             

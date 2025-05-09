@@ -15,11 +15,9 @@ namespace Qnx.Core.Services;
 public class PlayerHealthService : SingletonService<PlayerHealthService>
 {
     private readonly ClientInstanceMethod<byte, Vector3> _damageEvent;
-    private static ClientInstanceMethod<byte> _sendHealth;
     public PlayerHealthService()
     {
         _damageEvent = ClientInstanceMethod<byte, Vector3>.Get(typeof(PlayerLife), "ReceiveDamagedEvent");
-        _sendHealth = ClientInstanceMethod<byte>.Get(typeof(PlayerLife), "ReceiveHealth");
         
         Logger.Log(_damageEvent.ToString());
         

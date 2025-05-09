@@ -17,7 +17,7 @@ public class QnxPlayer : MonoBehaviour
     {
         Player = player;
         Hud = gameObject.AddComponent<PlayerHud>();
-        Life = new PlayerLife();
+        Life = gameObject.AddComponent<PlayerLife>();
         Buffs = gameObject.AddComponent<PlayerBuffs>();
         
         Buffs.Initialize(this);

@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using Qnx.Core.Enums;
 using Qnx.Core.Interfaces;
 using Qnx.Core.Utils;
+using SDG.Unturned;
 using UnityEngine;
 
 namespace Qnx.Core.Components;
@@ -13,12 +15,10 @@ public class PlayerBuffs : MonoBehaviour, IPlayerComponent
     public Dictionary<EBuff, int> BuffModifier = EnumDictionary.Create<EBuff, int>();
     public Dictionary<EBuff, float> BuffChance = EnumDictionary.Create<EBuff, float>();
     public Dictionary<EBuff, byte> BuffProtection = EnumDictionary.Create<EBuff, byte>();
-
-
+    
     public float SpeedMult = 1f;
     public float JumpMult = 1f;
     public float GravityMult = 1f;
-
     
     public void Initialize(QnxPlayer player)
     {
@@ -57,4 +57,5 @@ public class PlayerBuffs : MonoBehaviour, IPlayerComponent
             BuffProtection[buff.Key] = 0;
         }
     }
+
 }

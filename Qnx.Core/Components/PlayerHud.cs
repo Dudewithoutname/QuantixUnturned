@@ -1,8 +1,6 @@
-using System;
+using Qnx.Core.Attributes;
 using Qnx.Core.Extensions;
 using Qnx.Core.Interfaces;
-using Rocket.Unturned.Events;
-using Rocket.Unturned.Player;
 using SDG.Unturned;
 using UnityEngine;
 
@@ -13,6 +11,10 @@ public class PlayerHud : MonoBehaviour, IPlayerComponent
     private const ushort ID = 31189;
     private const short KEY = 152;
 
+    [LoadAsset(EAssetType.EFFECT, ID)] 
+    private static EffectAsset _assetUI;
+    
+
     private QnxPlayer _qnx;
     
     private int _healthSeq;
@@ -22,9 +24,7 @@ public class PlayerHud : MonoBehaviour, IPlayerComponent
     {
         _qnx = player;
         
-        #pragma warning disable CS0618 // Type or member is obsolete
-        EffectManager.sendUIEffect(ID, KEY, player.Player.TC(), true);
-        #pragma warning restore CS0618 // Type or member is obsolete
+        EffectManager.SendUIEffect(_assetUI, KEY, player.Player.TC(), true);
         
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowLifeMeters, false);
         _qnx.Player.setPluginWidgetFlag(EPluginWidgetFlags.ShowUseableGunStatus, false);
@@ -45,7 +45,7 @@ public class PlayerHud : MonoBehaviour, IPlayerComponent
         
         if (player.Player.equipment.itemID != 0)
         {
-            bool garbage = false;
+            var garbage = false;
             onEquip
             (
                 _qnx.Player.equipment,

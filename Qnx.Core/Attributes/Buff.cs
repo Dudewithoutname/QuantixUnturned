@@ -5,7 +5,7 @@ using Qnx.Core.Enums;
 namespace Qnx.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class Buff(EBuff origin) : Attribute
+internal class Buff(EBuff origin) : Attribute
 {
     public readonly EBuff Origin = origin;
     

@@ -2,6 +2,7 @@
 using HarmonyLib;
 using Qnx.Core.Interfaces;
 using Qnx.Core.Services;
+using Qnx.Core.Utils;
 using Rocket.Core.Plugins;
 using SDG.Unturned;
 
@@ -23,9 +24,17 @@ public class CorePlugin : RocketPlugin
             new PlayerService(),
             new PlayerHealthService(),
         ];
+        
+        Level.onPostLevelLoaded += postLoad;
     }
 
     protected override void Unload()
     {
+        Level.onPostLevelLoaded -= postLoad;
+    }
+
+    private void postLoad(int _)
+    {
+        AttributeLoader.LoadAssets();
     }
 }

@@ -63,7 +63,7 @@ public class PlayerLife : MonoBehaviour, IPlayerComponent
         _qnx.Hud.UpdateHealth();
     }
     
-    public void Damage(int damage)
+    public void Damage(int damage, EDeathCause cause = EDeathCause.SUICIDE, ELimb limb = ELimb.SKULL, CSteamID? killer = null)
     {
         if (Health - damage >= 100)
         {
@@ -77,12 +77,14 @@ public class PlayerLife : MonoBehaviour, IPlayerComponent
             if (_health < 0) 
                 _health = 1;
             
-            _qnx.Player.life.askDamage(255, Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out _);
+            _qnx.Player.life.askDamage(255, Vector3.zero, cause, limb, killer ?? CSteamID.Nil, out _);
             return;
         }
         
-        _qnx.Player.life.askDamage((byte)Mathf.Max(damage, 255), Vector3.zero, EDeathCause.SUICIDE, ELimb.SKULL, CSteamID.Nil, out _);
+        _qnx.Player.life.askDamage((byte)Mathf.Min(damage, 255), Vector3.zero, cause, limb, killer ?? CSteamID.Nil, out _);
     }
+    
+    
 
     public void Heal(int heal)
     {

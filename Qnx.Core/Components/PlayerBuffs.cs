@@ -29,6 +29,7 @@ public class PlayerBuffs : MonoBehaviour, IPlayerComponent
     
     private int _igniteTicks;
     private int _freezeTicks;
+    private int _slowTicks;
     
     
     public void Initialize(QnxPlayer player)
@@ -141,6 +142,41 @@ public class PlayerBuffs : MonoBehaviour, IPlayerComponent
             yield return new WaitForSeconds(1f);
         }
 
+        DisableMovementUpdate = false;
+        UpdateMovementMultipliers();
+    }
+
+    public void Slow(int duration)
+    {
+        if (BuffProtection[EBuff.SLOW] != 0)
+            return;
+        
+        if (_slowTicks > 0)
+        {
+            if (_slowTicks >= duration) 
+                return;
+            
+            _slowTicks = duration;
+            return;
+        }
+
+        _slowTicks = duration;
+        
+        DisableMovementUpdate = true;
+        _qnx.Player.movement.sendPluginSpeedMultiplier(SpeedMult * 0.4f);
+        _qnx.Player.movement.sendPluginJumpMultiplier(JumpMult);
+        _qnx.Player.movement.sendPluginGravityMultiplier(GravityMult * 2.0f);
+        StartCoroutine(slowTicks());
+    }
+    
+    private IEnumerator slowTicks()
+    {
+        while (_slowTicks > 0)
+        {
+            _slowTicks--;
+            yield return new WaitForSeconds(1f);
+        }
+ 
         DisableMovementUpdate = false;
         UpdateMovementMultipliers();
     }

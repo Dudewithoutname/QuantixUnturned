@@ -1,16 +1,23 @@
+using System.Collections.Generic;
 using Qnx.Core.Components;
+using Qnx.Core.Enums;
 using Qnx.Core.Extensions;
+using Qnx.Core.Interfaces;
 using Qnx.Core.Utils;
 using SDG.Unturned;
 using Steamworks;
+using UnityEngine;
 
 namespace Qnx.Core.Services;
 
 public class BuffService : SingletonService<BuffService>
 {
-
+    private Dictionary<EBuff, IBuff> _buffs;
+    
     public BuffService()
     {
+        _buffs = AttributeLoader.GetBuffProviders();
+        
         DamageTool.damagePlayerRequested += onDamage;
     }
 
@@ -24,15 +31,37 @@ public class BuffService : SingletonService<BuffService>
         if (parameters.killer == CSteamID.Nil || parameters.player == null)
             return;
 
-        var attacker = PlayerTool.getPlayer(parameters.killer);
-        if (attacker == null) 
+        var attackerPlayer = PlayerTool.getPlayer(parameters.killer);
+        if (!attackerPlayer) 
             return;
         
-        applyDebuffs(attacker.QnxComponent().Buffs, parameters.player.QnxComponent().Buffs);
+        var attacker = attackerPlayer.QnxComponent();
+
+        var victim = parameters.player.QnxComponent();
+
+        if (victim.Buffs.BuffModifier[EBuff.DODGE] >= 1 && victim.Buffs.BuffChance[EBuff.DODGE] >= Random.Range(0.0f, 100.0f))
+        {
+            shouldAllow = false;
+            return;
+        }
+        
+        applyDebuffs(attacker, victim);
     }
 
-    private void applyDebuffs(PlayerBuffs attacker, PlayerBuffs target)
+    private void applyDebuffs(QnxPlayer attacker, QnxPlayer target)
     {
-        
+        // thorns
+        if (target.Buffs.BuffModifier[EBuff.THORNS] >= 1 && target.Buffs.BuffChance[EBuff.THORNS] >= Random.Range(0.0f, 100.0f))
+        {
+            attacker.Life.Damage(target.Buffs.BuffModifier[EBuff.THORNS], EDeathCause.ACID, ELimb.SPINE, target.Player.SteamID());
+        }
+
+        foreach (var b in _buffs)
+        {
+            if (attacker.Buffs.BuffModifier[b.Key] <= 0) return;
+            if (attacker.Buffs.BuffChance[b.Key] < Random.Range(0.0f, 100.0f)) return;
+            
+            b.Value.Apply(attacker, target);
+        }
     }
 }

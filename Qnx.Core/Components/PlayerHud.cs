@@ -12,7 +12,7 @@ public class PlayerHud : MonoBehaviour, IPlayerComponent
     private const short KEY = 152;
 
     [LoadAsset(EAssetType.EFFECT, ID)] 
-    private static EffectAsset _assetUI;
+    private static EffectAsset _assetUI = null!;
     
 
     private QnxPlayer _qnx;

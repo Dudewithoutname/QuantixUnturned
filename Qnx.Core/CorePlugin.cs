@@ -23,6 +23,7 @@ public class CorePlugin : RocketPlugin
         [
             new PlayerService(),
             new PlayerHealthService(),
+            new BuffService(),
         ];
         
         Level.onPostLevelLoaded += postLoad;

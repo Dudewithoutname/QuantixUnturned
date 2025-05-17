@@ -13,7 +13,7 @@ namespace Qnx.Core.Components;
 public class PlayerBuffs : MonoBehaviour, IPlayerComponent
 {
     [LoadAsset(EAssetType.EFFECT, 139)]
-    private static EffectAsset _effectIgnite;
+    private static EffectAsset _effectIgnite = null!;
     
     private QnxPlayer _qnx;
     
@@ -103,7 +103,10 @@ public class PlayerBuffs : MonoBehaviour, IPlayerComponent
                 _igniteTicks = 0;
                 yield break;
             }
-            EffectManager.triggerEffect(new TriggerEffectParameters(_effectIgnite));
+            EffectManager.triggerEffect(new TriggerEffectParameters(_effectIgnite)
+            {
+                position = _qnx.Player.transform.position
+            });
             _qnx.Life.Damage(1);
             _igniteTicks--;
             yield return new WaitForSeconds(1f);

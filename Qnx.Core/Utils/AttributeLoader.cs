@@ -27,7 +27,7 @@ internal static class AttributeLoader
             result[attr.Origin] = Activator.CreateInstance(type) as IBuff;
         }
 
-        return result;
+        return result; 
     }
 
     internal static void LoadAssets()
@@ -50,12 +50,14 @@ internal static class AttributeLoader
                 if (asset == null)
                 {
                     Logger.LogError($"Missing static asset => {type.Name}.{field.Name} with id {att.Id}");
+                    field.SetValue(null, null);
                     return;
                 }
 
                 if (!field.FieldType.IsAssignableFrom(asset.GetType()))
                 {
                     Logger.LogError($"Invalid static asset type => {type.Name}.{field.Name} with id {att.Id}");
+                    field.SetValue(null, null);
                     return;
                 }
                 field.SetValue(null, asset);

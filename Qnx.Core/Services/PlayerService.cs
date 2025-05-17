@@ -39,12 +39,15 @@ public class PlayerService : SingletonService<PlayerService>
     
     private void onPlayerConnect(Player player)
     {
-        var component = player.gameObject.AddComponent<QnxPlayer>();
-        Players.Add(player.SteamID(), component);
-        component.Initiliaze(player);
-        
-        foreach (var c in _customComponents)
-            player.gameObject.AddComponent(c);
+        var playerComponent = player.gameObject.AddComponent<QnxPlayer>();
+        Players.Add(player.SteamID(), playerComponent);
+        playerComponent.Initiliaze(player);
+
+        foreach (var cType in _customComponents)
+        {
+            var c = player.gameObject.AddComponent(cType) as IPlayerComponent;
+            c?.Initialize(playerComponent);
+        }
     }
 
     private void onPlayerDisconnect(SteamPlayer player)

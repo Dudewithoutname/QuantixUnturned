@@ -7,26 +7,25 @@ using SDG.Unturned;
 
 namespace Qnx.Core.Models.Buffs;
 
-[Buff(EBuff.LIFESTEAL)]
-public class LifestealBuff : IBuff
+[Buff(EBuff.LIGHTNING)]
+public class LightningBuff : IBuff
 {
-    [LoadAsset(EAssetType.EFFECT, 124)]
+    [LoadAsset(EAssetType.EFFECT, 127)]
     private static EffectAsset _effect = null!;
 
     public void Apply(QnxPlayer attacker, QnxPlayer target)
     {
-        attacker.Life.Heal(attacker.Buffs.BuffModifier[EBuff.LIFESTEAL]);
-        var pos = target.Player.transform.position;
-        pos.y += 0.65f;
+        target.Life.Damage(
+            attacker.Buffs.BuffModifier[EBuff.LIGHTNING], 
+            EDeathCause.BURNING, 
+            ELimb.SPINE, 
+            attacker.Player.SteamID()
+            );
         
         var e = new TriggerEffectParameters(_effect)
         {
-            position = pos,
-            reliable = false
+            position = target.Player.transform.position,
         };
-        e.SetUniformScale(0.3f);
-        e.SetRelevantPlayer(attacker.Player.TC());
-        
         EffectManager.triggerEffect(e);
     }
 }

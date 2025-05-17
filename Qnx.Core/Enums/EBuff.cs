@@ -12,5 +12,6 @@ public enum EBuff
     BLEED,
     SLOW,
     REAPER,
-    THORNS
+    THORNS,
+    LIGHTNING,
 }

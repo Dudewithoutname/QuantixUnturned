@@ -11,6 +11,7 @@ using Qnx.Items.Models.Items;
 using Qnx.Items.Services;
 using SDG.Unturned;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
@@ -40,6 +41,7 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
     {
         Qnx = player;
         
+        Logger.Log("Init");
         ClothingBuffs = EnumDictionary.Create<EClothing, ModifiedItem?>();
         ClothingSets = [];
         Attachments = [];
@@ -73,6 +75,7 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
         
         
         var item = equipment.itemID == 0 ? null : ItemService.Singleton.GetItem(equipment.itemID);
+        Logger.Log($"USEALBE ITEM: {item?.Id ?? 0}");
         
         if (Useable is not null)
         { 

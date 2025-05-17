@@ -7,6 +7,7 @@ using Qnx.Core.Utils;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using Logger = Rocket.Core.Logging.Logger;
 
 namespace Qnx.Core.Services;
 
@@ -28,7 +29,7 @@ public class BuffService : SingletonService<BuffService>
 
     private void onDamage(ref DamagePlayerParameters parameters, ref bool shouldAllow)
     {
-        if (parameters.killer == CSteamID.Nil || parameters.player == null)
+        if (parameters.killer == CSteamID.Nil || !parameters.player)
             return;
 
         var attackerPlayer = PlayerTool.getPlayer(parameters.killer);
@@ -36,7 +37,6 @@ public class BuffService : SingletonService<BuffService>
             return;
         
         var attacker = attackerPlayer.QnxComponent();
-
         var victim = parameters.player.QnxComponent();
 
         if (victim.Buffs.BuffModifier[EBuff.DODGE] >= 1 && victim.Buffs.BuffChance[EBuff.DODGE] >= Random.Range(0.0f, 100.0f))
@@ -50,7 +50,6 @@ public class BuffService : SingletonService<BuffService>
 
     private void applyDebuffs(QnxPlayer attacker, QnxPlayer target)
     {
-        // thorns
         if (target.Buffs.BuffModifier[EBuff.THORNS] >= 1 && target.Buffs.BuffChance[EBuff.THORNS] >= Random.Range(0.0f, 100.0f))
         {
             attacker.Life.Damage(target.Buffs.BuffModifier[EBuff.THORNS], EDeathCause.ACID, ELimb.SPINE, target.Player.SteamID());
@@ -58,9 +57,8 @@ public class BuffService : SingletonService<BuffService>
 
         foreach (var b in _buffs)
         {
-            if (attacker.Buffs.BuffModifier[b.Key] <= 0) return;
-            if (attacker.Buffs.BuffChance[b.Key] < Random.Range(0.0f, 100.0f)) return;
-            
+            if (attacker.Buffs.BuffModifier[b.Key] <= 0) continue;
+            if (attacker.Buffs.BuffChance[b.Key] < Random.Range(0.0f, 100.0f)) continue;
             b.Value.Apply(attacker, target);
         }
     }

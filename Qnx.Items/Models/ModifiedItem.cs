@@ -9,7 +9,7 @@ public record ModifiedItem : ModifiedBase
 {
     
     [YamlMember(Order = 0)]
-    public readonly ushort Id;
+    public ushort Id;
     
     public virtual bool Equals(ModifiedItem? other)
         => other is not null && Id == other.Id;

@@ -1,0 +1,16 @@
+using System;
+using JetBrains.Annotations;
+using SDG.Unturned;
+
+namespace Qnx.Unturned.Utils.Assets;
+
+/// <summary>
+/// Automatically loads asset when all assets load
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+[MeansImplicitUse(ImplicitUseKindFlags.Assign)]
+internal class LoadAsset(EAssetType type, ushort id) : Attribute
+{
+    public ushort Id = id;
+    public EAssetType Type = type;
+} 

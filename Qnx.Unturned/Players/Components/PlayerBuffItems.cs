@@ -37,7 +37,6 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
     {
         Qnx = player;
         
-        Logger.Log("Init");
         ClothingBuffs = EnumDictionary.Create<EClothing, ModifiedItem?>();
         ClothingSets = [];
         Attachments = [];
@@ -71,8 +70,6 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
         
         
         var item = equipment.itemID == 0 ? null : ItemService.Instance!.GetItem(equipment.itemID);
-        Logger.Log($"USEALBE ITEM: {item?.Id ?? 0}");
-        
         if (Useable is not null)
         { 
             Useable?.RemoveFromPlayer(this);
@@ -96,7 +93,6 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
         
         Useable = item;
         Useable?.AddToPlayer(this);
-
         if (equipment.asset is not ItemGunAsset)
             return;
         

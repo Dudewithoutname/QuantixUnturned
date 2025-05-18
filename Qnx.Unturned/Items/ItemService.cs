@@ -7,6 +7,8 @@ using Qnx.Unturned.Items.Models;
 using Qnx.Unturned.Items.Models.Types;
 using Qnx.Unturned.Services;
 using Qnx.Unturned.Utils;
+using SDG.Unturned;
+using UnityEngine;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -15,14 +17,29 @@ namespace Qnx.Unturned.Items;
 [Service(EServiceType.NORMAL)]
 public class ItemService : Singleton<ItemService>, IService
 {
-    private Dictionary<ushort, ModifiedItem> _items = [];
-    private Dictionary<ushort, List<GunSet>> _gunSets = [];
-    private List<ClothingSet> _clothingSets = [];
+    private static string _directory = "Items";
+    
+    private Dictionary<ushort, ModifiedItem> _items;
+    private Dictionary<ushort, List<GunSet>> _gunSets;
+    private List<ClothingSet> _clothingSets;
 
-    public void Initialize()
+    public ItemService()
     {
-        var path = Path.Combine(Rocket.Core.Environment.PluginsDirectory, "Qnx.Items");
+        _items = [];
+        _gunSets = [];
+        _clothingSets = [];
+        getItemsFromFiles();
+        Logger.Log($"Loaded {_items.Count} items, {_clothingSets.Count} clothing sets, {_gunSets.Count} gun sets");
+    }
 
+    public void Dispose()
+    {
+        RemoveInstance();
+    }
+    
+    private void getItemsFromFiles()
+    {
+        var path = FileUtil.PrepareDirectory(_directory);
         var deserializer = createDeserializer();
         
         foreach (var file in Directory.EnumerateFiles(path))
@@ -33,15 +50,8 @@ public class ItemService : Singleton<ItemService>, IService
             var items = deserializer.Deserialize<List<ModifiedBase>>(File.ReadAllText(file));
             registerItems(items, file);
         }
-        
-        Logger.Log($"Loaded {_items.Count} items, {_clothingSets.Count} clothing sets, {_gunSets.Count} gun sets");
-
     }
-
-    public void Dispose()
-    {
-    }
-
+    
     private IDeserializer createDeserializer()
     {
         var b = new DeserializerBuilder()

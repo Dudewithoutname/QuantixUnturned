@@ -1,10 +1,10 @@
 using HarmonyLib;
-using Qnx.Core.Extensions;
-using Qnx.Core.Services;
+using Qnx.Unturned.Extensions;
+using Qnx.Unturned.Players;
 using SDG.Unturned;
 using Steamworks;
 
-namespace Qnx.Core.Patches;
+namespace Qnx.Unturned.Patches;
 
 [HarmonyPatch]
 public class PlayerLifePatch
@@ -15,7 +15,7 @@ public class PlayerLifePatch
         EDeathCause newCause, ELimb newLimb, CSteamID newKiller, EPlayerKill kill, 
         bool trackKill, ERagdollEffect newRagdollEffect, bool canCauseBleeding)
     {
-        amount = PlayerHealthService.Singleton.HandleDamage(__instance.player, amount, newRagdoll, out var result);
+        amount = PlayerHealthService.Instance!.HandleDamage(__instance.player, amount, newRagdoll, out var result);
         
         return result;
     }
@@ -27,7 +27,7 @@ public class PlayerLifePatch
         if (amount == 0)
             return false;
 
-        amount = PlayerHealthService.Singleton.HandleHeal(__instance, amount, healBleeding, healBroken, out var allow);
+        amount = PlayerHealthService.Instance!.HandleHeal(__instance, amount, healBleeding, healBroken, out var allow);
         return allow;
     }
     

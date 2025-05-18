@@ -1,11 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qnx.Core", "Qnx.Core\Qnx.Core.csproj", "{72BB1F62-4CDF-4196-9372-E49EFE7EA352}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qnx.Items", "Qnx.Items\Qnx.Items.csproj", "{D6D83D68-9AD8-478F-BF9A-2CB1E970AFFD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qnx.Items.SourceGenerators", "Qnx.Items.SourceGenerators\Qnx.Items.SourceGenerators.csproj", "{0BAABA1A-DA59-4291-9A0F-E87106B53A4F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qnx.Unturned", "Qnx.Unturned\Qnx.Unturned.csproj", "{E0FCD478-E655-4202-86F7-11A15A9A7DBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qnx.Unturned.SourceGenerators", "Qnx.Unturned.SourceGenerators\Qnx.Unturned.SourceGenerators.csproj", "{B0B47161-F2A5-4FF2-8170-B605A33C899C}"
@@ -16,18 +10,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{72BB1F62-4CDF-4196-9372-E49EFE7EA352}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72BB1F62-4CDF-4196-9372-E49EFE7EA352}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72BB1F62-4CDF-4196-9372-E49EFE7EA352}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72BB1F62-4CDF-4196-9372-E49EFE7EA352}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6D83D68-9AD8-478F-BF9A-2CB1E970AFFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6D83D68-9AD8-478F-BF9A-2CB1E970AFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6D83D68-9AD8-478F-BF9A-2CB1E970AFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6D83D68-9AD8-478F-BF9A-2CB1E970AFFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BAABA1A-DA59-4291-9A0F-E87106B53A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BAABA1A-DA59-4291-9A0F-E87106B53A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BAABA1A-DA59-4291-9A0F-E87106B53A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BAABA1A-DA59-4291-9A0F-E87106B53A4F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E0FCD478-E655-4202-86F7-11A15A9A7DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0FCD478-E655-4202-86F7-11A15A9A7DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0FCD478-E655-4202-86F7-11A15A9A7DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,6 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 using Qnx.Unturned.Services;
+using Qnx.Unturned.Utils;
 using Qnx.Unturned.Utils.Assets;
 using Rocket.Core.Plugins;
 using SDG.Unturned;
@@ -14,11 +15,13 @@ public class Plugin : RocketPlugin
 
     protected override void Load()
     {
+        FileUtil.Init();
+        
         ServiceCollection = new ServiceCollection(gameObject);
         
         _harmony = new Harmony("dudewithoutname.qnx.unturned");
         _harmony.PatchAll();
-        
+
         Level.onPostLevelLoaded += onPostLoad;
     }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -13,8 +12,9 @@ public class ItemBuffGenerator : IIncrementalGenerator
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var buffType = context.CompilationProvider
-            .Select((compilation, _) => compilation.GetTypeByMetadataName("Qnx.Core.Enums.EBuff"));
-
+            .Select((compilation, _) => compilation.GetTypeByMetadataName("Qnx.Unturned.Buffs.EBuff"));
+        
+        
         context.RegisterSourceOutput(buffType, (spc, ebuffSymbol) =>
         {
             if (ebuffSymbol == null) return;
@@ -22,7 +22,8 @@ public class ItemBuffGenerator : IIncrementalGenerator
             var sourceBuilder = new StringBuilder(@"
                 using Qnx.Unturned.Buffs;
                 using Qnx.Unturned.Items.Models;
-                namespace Qnx.Unturned.Models.Buffs.Generated
+
+                namespace Qnx.Unturned.Items.Models.Buffs
                 {
             ");
 

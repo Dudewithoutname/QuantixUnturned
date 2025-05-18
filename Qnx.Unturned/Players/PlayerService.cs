@@ -10,10 +10,11 @@ namespace Qnx.Unturned.Players;
 [Service(EServiceType.NORMAL)]
 public class PlayerService : Singleton<PlayerService>, IService
 {
-    public Dictionary<CSteamID, QnxPlayer> Players = [];
+    public Dictionary<CSteamID, QnxPlayer> Players;
 
-    public void Initialize()
+    public PlayerService()
     {
+        Players = [];
         Player.onPlayerCreated += onPlayerConnect;
         Provider.onEnemyDisconnected += onPlayerDisconnect;
     }

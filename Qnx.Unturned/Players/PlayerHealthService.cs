@@ -1,37 +1,34 @@
-using HarmonyLib;
-using Qnx.Core.Components;
-using Qnx.Core.Extensions;
-using Qnx.Core.Utils;
-using Rocket.Core.Logging;
+using Qnx.Unturned.Extensions;
+using Qnx.Unturned.Services;
+using Qnx.Unturned.Utils;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 using SDG.NetTransport;
 using SDG.Unturned;
-using Steamworks;
-using PlayerLife = SDG.Unturned.PlayerLife;
 
-namespace Qnx.Core.Services;
+namespace Qnx.Unturned.Players;
 
-public class PlayerHealthService : SingletonService<PlayerHealthService>
+[Service(EServiceType.NORMAL)]
+public class PlayerHealthService : Singleton<PlayerHealthService>, IService
 {
     private readonly ClientInstanceMethod<byte, Vector3> _damageEvent;
+
     public PlayerHealthService()
     {
         _damageEvent = ClientInstanceMethod<byte, Vector3>.Get(typeof(PlayerLife), "ReceiveDamagedEvent");
         
         Logger.Log(_damageEvent.ToString());
-        
         UnturnedPlayerEvents.OnPlayerRevive += onRevive;
         UnturnedPlayerEvents.OnPlayerUpdateVirus += onVirus;
+        
     }
-    
-    protected override void OnDispose()
+    public void Dispose()
     {
         UnturnedPlayerEvents.OnPlayerRevive -= onRevive;
         UnturnedPlayerEvents.OnPlayerUpdateVirus -= onVirus;
-
+        RemoveInstance();
     }
-
+    
     private void onRevive(UnturnedPlayer player, Vector3 _v, byte _e)
         => player.Player.QnxComponent().Life.Revive();
 
@@ -43,7 +40,6 @@ public class PlayerHealthService : SingletonService<PlayerHealthService>
         var qnx = player.QnxComponent();
         var prev = qnx.Life.Health;
         qnx.Life.Health -= damage;
-        
         
         if (qnx.Life.Health >= 100)
         {					
@@ -88,4 +84,5 @@ public class PlayerHealthService : SingletonService<PlayerHealthService>
         allow = true;
         return amount;
     }
+
 }

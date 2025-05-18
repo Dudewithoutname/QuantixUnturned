@@ -1,15 +1,12 @@
-using System;
-using Qnx.Core.Interfaces;
-using Rocket.Unturned.Events;
-using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
-using Logger = Rocket.Core.Logging.Logger;
 
-namespace Qnx.Core.Components;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-public class PlayerLife : MonoBehaviour, IPlayerComponent
+namespace Qnx.Unturned.Players.Components;
+
+public class PlayerHealth : MonoBehaviour, IPlayerComponent
 {
     private QnxPlayer _qnx;
     

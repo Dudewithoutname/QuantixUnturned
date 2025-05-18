@@ -68,7 +68,6 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
         if (equipment.player.SteamID() != Qnx.Player.SteamID())
             return;
         
-        
         var item = equipment.itemID == 0 ? null : ItemService.Instance!.GetItem(equipment.itemID);
         if (Useable is not null)
         { 
@@ -78,21 +77,21 @@ public class PlayerBuffItems : MonoBehaviour, IPlayerComponent
             GunSet?.RemoveFromPlayer(this);
             GunSet = null;
 
-            if (Attachments.Count <= 0) 
-                return;
+            if (Attachments.Count == 0)
+                goto skip;
             
             foreach (var attachment in Attachments)
                 attachment.RemoveFromPlayer(this);
             
             Attachments.Clear();
-            return;
         }
-
+        
+        skip:
         if (item is null)
             return;
         
         Useable = item;
-        Useable?.AddToPlayer(this);
+        Useable.AddToPlayer(this);
         if (equipment.asset is not ItemGunAsset)
             return;
         

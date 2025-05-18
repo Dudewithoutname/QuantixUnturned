@@ -109,7 +109,8 @@ public class ItemService : Singleton<ItemService>, IService
     }
 
     public ModifiedItem? GetItem(ushort id)
-        => _items.GetValueOrDefault(id);
+         => _items.GetValueOrDefault(id);
+    
 
     public void GetClothingSets(List<ClothingSet> source, ushort[] clothes) 
         => source.AddRange(_clothingSets.Where(set => set.Parts!.Compare(clothes)));
